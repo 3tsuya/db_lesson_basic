@@ -1,21 +1,123 @@
-INSERT INTO reports (report_id, person_id, content, created_at, update_at)
-VALUES 
-(1, 1, '内容1', '2024-01-01 01:00:00', '2024-01-02 02:00:00'),
-(2, 2, '内容2', '2024-02-01 02:00:00', '2024-02-02 03:00:00'),
-(3, 3, '内容3', '2024-03-01 03:00:00', '2024-03-02 04:00:00'),
-(5, 5, '内容5', '2024-05-01 05:00:00', '2024-05-02 06:00:00'),
-(6, 6, '内容6', '2024-06-01 06:00:00', '2024-06-02 07:00:00'),
-(7, 7, '内容7', '2024-07-01 07:00:00', '2024-07-02 08:00:00'),
-(8, 8, '内容8', '2024-08-01 08:00:00', '2024-08-02 09:00:00'),
-(9, 9, '内容9', '2024-09-01 09:00:00', '2024-09-02 11:00:00'),
-(10, 10, '内容10', '2024-10-01 10:00:00', '2024-10-02 00:00:00'),
-(1111, 1111, '内容1111', '2024-11-11 00:00:00', '2024-11-12 00:00:00');
+
+-- Q1
+create table departments(
+department_id INT unsigned auto_increment primary key,
+name VARCHAR(20),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Q2
+alter table people
+add column department_id int unsigned after email;
+
+-- Q3
+insert into departments (name)
+values
+('営業'),
+('開発'),
+('経理'),
+('人事'),
+('情報システム');
+
+insert into people (department_id, name)
+values
+(1, '営業1'),
+(1, '営業2'),
+(1, '営業3'),
+(2, '開発1'),
+(2, '開発2'),
+(2, '開発3'),
+(2, '開発4'),
+(3, '経理1'),
+(4, '人事1'),
+(5,'情報システム1');
+
+insert into reports (person_id, content)
+values
+(1, 'ああああああああああああ'),
+(2, 'いいいいいいいいいいいい'),
+(3, 'うううううううううううう'),
+(4, 'ええええええええええええ'),
+(5, 'おおおおおおおおおおおお'),
+(6, 'カカかかかカカカカカカか'),
+(7, '聞き聞ききききききききき'),
+(8, 'クククククくくくくくくく'),
+(9, 'けけけけけけけけけけけけ'),
+(10, 'ここここここここここここ');
+
+-- Q4
+update people
+set department_id = 1
+where name = '鈴木たかし';
+
+update people
+set department_id = 2
+where name = '田中ゆうこ';
+
+update people
+set department_id = 3
+where name = '福田だいすけ';
+
+update people
+set department_id = 4
+where name = '豊島はなこ';
+
+update people
+set department_id = 5
+where name = '不思議沢みちこ';
+
+-- Q5
+select name, age
+from people
+where gender = 1
+order by age desc;
 
 
-条件
-レコード数は10件以上
-NULLの値を作らない
-日報を一つも投稿していないユーザーが一人だけいる状態にする
-person_id 4
-peopleに存在しないperson_idを持った日報を一つ作る
-1111→絶対いない
+-- Q6
+SELECT
+  `name`, `email`, `age`
+FROM
+  `people`
+WHERE
+  `department_id` = 1
+ORDER BY
+  `created_at`;
+
+peopleテーブルの中から
+営業部のレコードのみ選択し
+名前、メールアドレス、年齢のカラムを表示し
+降順順に並べる。
+
+-- Q7
+select name
+from people
+where gender = 2 && age between 20 and 29;
+or gender = 1 && age between 40 and 49;
+
+-- Q8
+select *
+from people 
+where department_id = 1
+order by age asc;
+
+-- Q9
+select avg(age)
+as average_age
+from people 
+where department_id = 2 && gender = 2;
+
+-- Q10
+select people.name, departments.name, reports.content
+from people
+inner join departments
+on people.department_id = departments.department_id
+inner join reports
+on people.person_id = reports.person_id;
+
+-- Q11
+select people.name
+from people
+left outer join reports
+on people.person_id = reports.person_id
+where reports.person_id is null;
